@@ -1,26 +1,38 @@
-package com.rachmad.imageviewer
+package com.rachmad.imageviewer.ui.listdir
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.widget.LinearLayout
 import android.widget.Toast
+import com.rachmad.imageviewer.R
 import com.rachmad.imageviewer.search.ExternalFound
-import com.rachmad.imageviewer.search.SearchDirectory
+import com.rachmad.imageviewer.search.SearchFile
+import com.rachmad.imageviewer.ui.listimage.ImageListActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FileItemFragment.OnListFragmentInteractionListener {
     val searchName by lazy {
-        SearchDirectory()
+        SearchFile()
     }
     val externalFound by lazy {
         ExternalFound()
     }
 
-    lateinit var listFile: Array<String>
+    var listFile = ArrayList<String>()
+
+    override fun onListFragmentInteraction(item: List<String>, position: Int) {
+        val intent = Intent(this, ImageListActivity::class.java)
+        intent.putStringArrayListExtra(ImageListActivity.ARG_DIR, ArrayList(item))
+        intent.putExtra(ImageListActivity.ARG_POSITION, position)
+        startActivity(intent)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,15 +71,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun processFile(){
         externalFound.checkExternal()
-//        Log.d("file", "External available => " + externalFound.mExternalStorageAvailable)
         Log.d("file", "External Storage Directory => " + externalFound.getExternalDirectory)
-//        Log.d("file", "External Storage Data Directory => " + externalFound.getExternalDataDirectory)
 
-        searchName.initialFile(externalFound.getExternalDirectory)
-        listFile = searchName.listFile
-        listFile.forEach {
-            Log.d("file", "my file -> " + it.toString())
-        }
+        searchName.search(externalFound.getExternalDirectory)
+        loading.visibility = LinearLayout.GONE
+
+        val map = searchName.hmap
+        Log.d("file", "map : ${map}")
+//        listFile = searchName.listFile
+//        listFile.forEach {
+//            Log.d("file", "my file -> " + it.toString())
+//        }
+
+        val fragment = FileItemFragment.newInstance(map)
+        supportFragmentManager.beginTransaction().add(R.id.directoryList, fragment).commit()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
