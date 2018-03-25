@@ -2,6 +2,7 @@ package com.rachmad.imageviewer.search
 
 import android.util.Log
 import com.rachmad.imageviewer.data.FileData
+import com.rachmad.imageviewer.helper.ExtensionList
 import java.io.File
 import java.nio.file.Files.isDirectory
 import java.util.regex.Pattern
@@ -24,7 +25,7 @@ class SearchFile{
         for (file in fList) {
             if(file.isFile()){
 //                Log.d("file", "my File file -> " + file.name)
-                if (Pattern.compile("\\.tga$", Pattern.CASE_INSENSITIVE).matcher(file.name).find()) {
+                if (Pattern.compile("\\.(${ExtensionList.extensionList.toString().replace(",", "|")})$", Pattern.CASE_INSENSITIVE).matcher(file.name).find()) {
 //                    Log.d("file", "my JPG file -> " + file.toString())
     //                listFile.add(file.toString())
                     if (hmap.isEmpty()) {
