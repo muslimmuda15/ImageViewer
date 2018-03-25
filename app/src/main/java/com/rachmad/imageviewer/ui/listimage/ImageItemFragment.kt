@@ -53,7 +53,7 @@ class ImageItemFragment : Fragment() {
             } else {
                 recyclerView.layoutManager = GridLayoutManager(context, mColumnCount)
             }
-            recyclerView.adapter = MyImageItemRecyclerViewAdapter(mData, mListener)
+            recyclerView.adapter = MyImageItemRecyclerViewAdapter(activity, mData, mListener)
         }
         return view
     }

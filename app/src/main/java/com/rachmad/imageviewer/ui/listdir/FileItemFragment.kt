@@ -50,7 +50,7 @@ class FileItemFragment : Fragment() {
 //                view.layoutManager = GridLayoutManager(context, 1)
 //            }
             Log.d("file", "count file : ${ArrayList(myMap.keys).size}")
-            val adapter = MyFileItemRecyclerViewAdapter(ArrayList(myMap.keys), myMap, mListener)
+            val adapter = MyFileItemRecyclerViewAdapter(activity, ArrayList(myMap.keys), myMap, mListener)
 //            val adapter = MyFileItemRecyclerViewAdapter(ArrayList(myMap.keys), mListener)
             adapter.notifyDataSetChanged()
             // the lsit of restaurant, get from MenuListModel
